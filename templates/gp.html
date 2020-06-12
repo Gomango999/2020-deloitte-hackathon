@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+{% for response in responses %}
+    <p> {{response.patient.name}} </p>
+{% endfor %}
+{% endblock %}

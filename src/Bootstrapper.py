@@ -7,7 +7,7 @@ def bootstrap_system():
     system = System()
     system.a = 5
 
-    g = GP()
+    g = GP("Jane")
     p = Patient("Bob")
     r = Response(p, g, NotImplemented, NotImplemented, NotImplemented)
     system.set_patient_response("aaa", r)

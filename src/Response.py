@@ -9,3 +9,7 @@ class Response:
     @property
     def patient(self):
         return self._patient
+
+    @property
+    def gp(self):
+        return self._gp
