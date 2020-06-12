@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block body %}
-{% for response in responses %}
-    <p> {{response.patient.name}} </p>
+<ol>
+{% for token, response in responses %}
+<li>
+    <p> <a href="/form_gp_view/{{token}}"> {{response.patient.name}}: {{token}} </a> </p>
+</li>
 {% endfor %}
+</ol>
 {% endblock %}

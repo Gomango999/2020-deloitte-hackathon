@@ -24,5 +24,11 @@ def submitted():
 
 @app.route('/gp/<name>')
 def gp_page(name):
-    rs = filter(lambda r: r.gp.name == name, system._patient_responses.values())
-    return render_template('gp.html', responses=rs)
+    responses = list(filter(lambda i: i[1].gp.name == name, system._patient_responses.items()))
+    return render_template('gp.html', responses=responses)
+
+
+@app.route('/form_gp_view/<form_token>')
+def form_gp_view(form_token):
+    response = system._patient_responses[form_token]
+    return render_template('form_gp_view.html', response=response)

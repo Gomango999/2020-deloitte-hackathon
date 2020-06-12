@@ -1,6 +1,6 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
-def Question(ABC):
+class Question(ABC):
     def __init__(self, question, answer):
         self._question = question
         self._answer = answer
@@ -16,28 +16,42 @@ def Question(ABC):
     @answer.setter
     def answer(self, answer):
         self._answer = answer
+    
+    @abstractmethod
+    def questionType(self):
+        """ Convenience method for Jinja """
+        raise NotImplementedError
 
-def TextQuestion(Question):
+class TextQuestion(Question):
     def __init__(self, question):
-        super(question, "")
+        super().__init__(question, "")
+    
+    def questionType(self):
+        return "text"
 
-def CheckBoxQuestion(Question):
+class CheckBoxQuestion(Question):
     def __init__(self, question, choices):
         """
         Choices: List[str]
         """
         self._choices = choices
-        super(question, [])
+        super().__init__(question, [])
     
     @property
     def choices(self):
         return self._choices
 
-def RadioButtonQuestion(Question):
+    def questionType(self):
+        return "check"
+
+class RadioButtonQuestion(Question):
     def __init__(self, question, choices):
         self._choices = choices
-        super(question, "")
+        super().__init__(question, 0)
     
     @property
     def choices(self):
         return self._choices
+    
+    def questionType(self):
+        return "radio"
