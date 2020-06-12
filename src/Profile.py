@@ -6,8 +6,8 @@ class Profile:
 				 }
 
 	def __init__(self, name, gender, date, email, num):
-		self.name = name 
-		self.gender = gender
-		self.date = date
-		self.num = num
+		self._name = name 
+		self._gender = gender
+		self._date = date
+		self._num = num
 
