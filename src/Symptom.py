@@ -1,7 +1,12 @@
 class Symptom:
- 	def __init__(self, name):
- 		self._name = name
- 		self._questions = []
+	def __init__(self, name, questions):
+		self._name = name
+		self._questions = questions
+	
+	@property
+	def name(self):
+		return self._name
 
- 	def addQuestion(question):
- 		self._questions[self._questions.len()] = question
+	@property
+	def questions(self):
+		return self._questions

@@ -1,6 +1,7 @@
 from src.System import System
 from src.Patient import Patient
 from src.GP import GP
+from src.Symptom import Symptom
 from src.Profile import Profile
 from src.Response import Response
 from src.Question import TextQuestion, RadioButtonQuestion, CheckBoxQuestion
@@ -26,8 +27,22 @@ def bootstrap_system():
     questions[4].answer = "Shellfish"
     questions[5].answer = [False, True, False]
 
+    symptoms = [
+        Symptom("Cough",
+        [RadioButtonQuestion("How is your cough?", ["Dry", "Wet"]),
+         TextQuestion("How long have you had this symptom?")
+        ]),
+        Symptom("Headache",
+        [RadioButtonQuestion("How is your headache?", ["Numb", "Sharp"]),
+         TextQuestion("How long have you had this symptom?")
+        ]),
+        Symptom("Fever",
+        [TextQuestion("What was your peak temperature?"),
+         TextQuestion("How long have you had this symptom?")
+        ])
+    ]
     
 
-    r = Response(p, g, questions, NotImplemented, NotImplemented)
+    r = Response(p, g, questions, NotImplemented, symptoms)
     system.set_patient_response("aaa", r)
     return system
