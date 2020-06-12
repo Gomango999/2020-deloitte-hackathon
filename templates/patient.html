@@ -3,11 +3,165 @@
 {% block title %}Index{% endblock %}
 
 {% block head %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function(){
+    let pages = [$('#cough'), $('#headache'), $('#fever')];
+    let curr = -1;
+    let selections = [];
+
+    // Hide all pages
+    $('#general').hide();
+    $('#selection').hide();
+    pages.forEach(el=>{
+      el.hide();
+    });
+
+    // Set up introduction and general links
+    $('#introduction>.next').click(() => {
+      $('#introduction').hide();
+      $('#general').show();
+    })
+
+    $('#general>.prev').click(() => {
+      $('#general').hide();
+      $('#introduction').show();
+    })
+    $('#general>.next').click(() => {
+      $('#general').hide();
+      $('#selection').show();
+    })
+
+    $('#selection>.prev').click(() => {
+      $('#selection').hide();
+      $('#general').show();
+    })
+    // Dynamically reroute all next and prev
+    $("#selection>.next").click(function(){
+      // Grab list of selections
+      selections = [];
+      $('#selection>input[type="checkbox"]').each((i, el) => {
+        if($(el).is(":checked")) {
+          page = $('#'+el.value)
+          selections.push(page)
+        }
+      });
+
+      // Reroute all next and prev
+      if (selections.length > 0) {
+        selections[selections.length-1].find(".next").removeAttr("type").attr("type", "submit");
+        selections.forEach((el, i) => {
+          nextButton = el.find('.next');
+          prevButton = el.find('.prev');
+          nextButton.off("click");
+          prevButton.off("click");
+          nextButton.click(() => {
+            if (curr+1 < selections.length) {
+              selections[curr+1].show();
+              selections[curr].hide();
+              curr++;
+            } else if (curr == selections.length-1) {
+              // Final element make it submit
+              console.log("FINAL BUTTON PICKED!")
+
+            }
+          });
+          prevButton.click(() => {
+            if (curr-1 >= 0) {
+              selections[curr-1].show();
+              selections[curr].hide();
+              curr--;
+            } else if (curr-1 == -1) {
+              $("#selection").show()
+              selections[curr].hide();
+              curr--;
+            }
+          });
+
+        });
+
+        // Hide and show current page
+        $("#selection").hide()
+        selections[0].show()
+        curr++;
+      }
+    });
+  });
+</script>
 {% endblock %}
 
 {% block body %}
-<h1> Hello, {{ response.patient.name }} </h1>
+<header class="show">
+</header>
+<div>
+<form action="/submitted" method="post">
+
+<div id="introduction" class="content">
+  <h2>Hello {{response.patient.name}}!</h2>
+  <p>You have been requested by your GP to fill out the following form before your appointment</p>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+
+<div id="general" class="content">
+  <h2>General Questions</h2>
+
+  <label for="general-q1">First Name</label><br>
+  <input type="text" name="general-q1" autocomplete="off"><br>
+  <label for="general-q2">Last Name</label><br>
+  <input type="text" name="general-q2" autocomplete="off"><br>
+  <label for="general-q3">Email</label><br>
+  <input type="text" name="general-q3" autocomplete="off"><br>
+  <label for="general-q4">Age</label><br>
+  <input type="text" name="general-q4" autocomplete="off"><br>
+
+  <button type="button" class="prev round">&#8249;</button>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+
+<div id="selection" class="content">
+  <p>Please select some of the symptoms you're experiencing</p>
+  <input type="checkbox" name="symptom-cough" value="cough"></input>
+  <label for="symptom-cough"> Cough </label><br>
+  <input type="checkbox" name="symptom-headache" value="headache"></input>
+  <label for="symptom-headache"> Headache </label><br>
+  <input type="checkbox" name="symptom-fever" value="fever"></input>
+  <label for="symptom-fever"> Fever </label><br>
+
+  <button type="button" class="prev round">&#8249;</button>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+
+<div id="cough" class="content symptom-questions">
+  <h4> Cough</h4>
+  <label for="cough-q1">How long have you had a cough for</label><br>
+  <input type="text" name="cough-q1" autocomplete="off"><br>
+
+  <button type="button" class="prev round">&#8249;</button>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+
+<div id="headache" class="content symptom-questions">
+  <h4> Headache </h4>
+  <label for="headache-q1">How long have you had a headache for</label><br>
+  <input type="text" name="headache-q1" autocomplete="off"><br>
+
+  <button type="button" class="prev round">&#8249;</button>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+
+<div id="fever" class="content symptom-questions">
+  <h4> Fever </h4>
+  <label for="fever-q1">How long have you had the feveer for</label><br>
+  <input type="text" name="fever-q1" autocomplete="off"><br>
+  <label for="fever-q2">What temperature was your fever</label><br>
+  <input type="text" name="fever-q1" autocomplete="off"><br>
+
+  <button type="button" class="prev round">&#8249;</button>
+  <button type="button" class="next round">&#8250;</button>
+</div>
+</form>
+</div>
 
 
-<button> Done </button>
+
 {% endblock %}

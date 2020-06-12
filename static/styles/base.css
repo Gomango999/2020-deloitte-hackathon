@@ -1,0 +1,48 @@
+body {
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  padding: 20px;
+}
+
+header {
+  min-width: 100%;
+  width: 100%
+}
+
+.content {
+  margin: 20px;
+  padding: 20px;
+  background-color: #f6f5f5;
+}
+
+.next,.prev {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  border: none !important;
+  background-color: #dddddd;
+  color: black;
+  margin: 10px;
+}
+
+.next:hover,.prev:hover {
+  background-color: #cdcdcd;
+  color: black;
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.show1 {
+  border: 1px red solid;
+}
+.show2 {
+  border: 1px blue solid;
+}
+.show3 {
+  border: 1px green solid;
+}

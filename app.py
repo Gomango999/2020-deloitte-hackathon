@@ -16,3 +16,7 @@ def index():
 def patient_form(form_token):
     response = system.get_patient_response(form_token)
     return render_template('patient.html', response=response)
+
+@app.route('/submitted', methods=["POST"])
+def submitted():
+    return render_template('submitted.html')
