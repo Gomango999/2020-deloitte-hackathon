@@ -19,8 +19,8 @@ def patient_form(form_token):
 
 @app.route('/submitted', methods=["POST"])
 def submitted():
-    return render_template('submitted.html')
-    return render_template('patient.html', response=response)
+    if request.method == 'POST':
+        return render_template('submitted.html', response=request.form["fever-q1"])
 
 @app.route('/gp/<name>')
 def gp_page(name):
