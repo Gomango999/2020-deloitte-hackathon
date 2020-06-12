@@ -10,7 +10,11 @@ def bootstrap_system():
 
     g = GP("Jane")
     p = Patient("Bob")
-    questions = [] 
-    r = Response(p, g, NotImplemented, NotImplemented, NotImplemented)
+    questions = [TextQuestion("Are you alive?"), RadioButtonQuestion("can u read this?", ["No", "Yes"]), CheckBoxQuestion("Question 3", ["0", "1"])]
+    questions[0].answer = "No"
+    questions[1].answer = 0
+    questions[2].answer = [True, True]
+
+    r = Response(p, g, questions, NotImplemented, NotImplemented, NotImplemented)
     system.set_patient_response("aaa", r)
     return system

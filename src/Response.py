@@ -15,7 +15,6 @@ class Response:
     def gp(self):
         return self._gp
     
-    
     @property
     def questions(self):
         return self._questions

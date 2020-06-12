@@ -19,5 +19,5 @@ def patient_form(form_token):
 
 @app.route('/gp/<name>')
 def gp_page(name):
-    rs = filter(lambda r: r.gp.name == name, system._patient_responses.values())
+    rs = list(filter(lambda r: r.gp.name == name, system._patient_responses.values()))
     return render_template('gp.html', responses=rs)
