@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Inform{% endblock %}
 
 {% block head %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script>
   $(document).ready(function(){
-    let pages = [$('#cough'), $('#headache'), $('#fever')];
+    let pages = [
+        {% for symptom in system.symptoms %}
+            $('#{{symptom.name}}'),
+        {% endfor %}
+    ];
     let curr = -1;
     let selections = [];
 
@@ -60,10 +64,6 @@
               selections[curr+1].show();
               selections[curr].hide();
               curr++;
-            } else if (curr == selections.length-1) {
-              // Final element make it submit
-              console.log("FINAL BUTTON PICKED!")
-
             }
           });
           prevButton.click(() => {
@@ -95,9 +95,10 @@
 </header>
 <div>
 <form action="/submitted" method="post">
+<input type="text" name="form_token" value="{{form_token}}" hidden />
 
 <div id="introduction" class="content">
-  <h2>Hello {{response.patient.name}}!</h2>
+  <h2>Hello {{patient.name}}!</h2>
   <p>You have been requested by your GP to fill out the following form before your appointment</p>
   <button type="button" class="next round">&#8250;</button>
 </div>
@@ -105,14 +106,42 @@
 <div id="general" class="content">
   <h2>General Questions</h2>
 
-  <label for="general-q1">First Name</label><br>
-  <input type="text" name="general-q1" autocomplete="off"><br>
-  <label for="general-q2">Last Name</label><br>
-  <input type="text" name="general-q2" autocomplete="off"><br>
-  <label for="general-q3">Email</label><br>
-  <input type="text" name="general-q3" autocomplete="off"><br>
-  <label for="general-q4">Age</label><br>
-  <input type="text" name="general-q4" autocomplete="off"><br>
+  {% for question in system.questions %}
+      {% set question_number = loop.index-1 %}
+      <label for="General-{{loop.index-1}}">{{question.question}}</label><br>
+      {% if question.questionType() == "text" %}
+        <p> <input type="text" name="General-{{loop.index-1}}" value="{{question.answer}}" autocomplete="off" /> </p>
+      {% elif question.questionType() == "textarea" %}
+          <p><textarea name="General-{{loop.index-1}}" rows="5" cols="50">{{question.answer}}</textarea> </p>
+      {% elif question.questionType () == "radio" %}
+          {% for choice in question.choices %}
+              {% if loop.index - 1 == question.answer|int %}
+              <p> <label> <input type="radio" name="General-{{question_number}}" value="{{loop.index-1}}" checked/> {{choice}} </label></p>
+              {% else %}
+              <p> <label> <input type="radio" name="General-{{question_number}}" value="{{loop.index-1}}" /> {{choice}} </label></p>
+              {% endif %}
+          {% endfor %}
+      {% elif question.questionType () == "check" %}
+          {% for choice in question.choices %}
+              {% if question.answer[loop.index-1] %}
+              <p> <label><input type="checkbox" name="General-{{question_number}}-{{loop.index-1}}" value="1" checked /> {{choice}}</label> </p>
+              {% else %}
+              <p> <label><input type="checkbox" name="General-{{question_number}}-{{loop.index-1}}" value="1"/> {{choice}}</label> </p>
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+  {% endfor %}
+
+  <!-- <label for="General-1">First Name</label><br>
+  <input type="text" name="General-0" autocomplete="off"><br>
+  <label for="General-2">Last Name</label><br>
+  <input type="text" name="General-1" autocomplete="off"><br>
+  <label for="General-3">What prescription or non-prescription medicine do you take, if any?</label><br>
+  <input type="text" name="General-2" autocomplete="off"><br>
+  <label for="General-4">Describe any surgeries you have had in the last 6 months, if any?</label><br>
+  <input type="text" name="General-3" autocomplete="off"><br>
+  <label for="General-5">Describe any surgeries you have had in the last 6 months, if any?</label><br>
+  <input type="text" name="General-4" autocomplete="off"><br> -->
 
   <button type="button" class="prev round">&#8249;</button>
   <button type="button" class="next round">&#8250;</button>
@@ -120,45 +149,43 @@
 
 <div id="selection" class="content">
   <p>Please select some of the symptoms you're experiencing</p>
-  <input type="checkbox" name="symptom-cough" value="cough"></input>
-  <label for="symptom-cough"> Cough </label><br>
-  <input type="checkbox" name="symptom-headache" value="headache"></input>
-  <label for="symptom-headache"> Headache </label><br>
-  <input type="checkbox" name="symptom-fever" value="fever"></input>
-  <label for="symptom-fever"> Fever </label><br>
-
+  {% for symptom in system.symptoms %}
+      <input type="checkbox" name="{{'Symptom-'+symptom.name}}" value="{{symptom.name}}"></input>
+      <label for="{{'Symptom-'+symptom.name}}"> {{symptom.name}} </label><br>
+  {% endfor %}
   <button type="button" class="prev round">&#8249;</button>
   <button type="button" class="next round">&#8250;</button>
 </div>
 
-<div id="cough" class="content symptom-questions">
-  <h4> Cough</h4>
-  <label for="cough-q1">How long have you had a cough for</label><br>
-  <input type="text" name="cough-q1" autocomplete="off"><br>
+{% for symptom in system.symptoms %}
+    <div id="{{symptom.name}}" class="content symptom-questions">
+        <h4>{{symptom.name}}</h4>
+        <ul>
+        {% for question in symptom.questions %}
+            <li>
+                {% set question_number = loop.index-1 %}
+                <p> {{question.question}} </p>
+                {% if question.questionType() == "text" %}
+                    <p> <input type="text" name="{{symptom.name+'-'+(question_number)|string}}" autocomplete="off" />   </p>
+                {% elif question.questionType() == "textarea" %}
+                    <p> <textarea name="{{symptom.name+'-'+(question_number)|string}}" rows="5" cols="50"> </textarea>   </p>
+                {% elif question.questionType () == "radio" %}
+                    {% for choice in question.choices %}
+                        <p> <label> <input type="radio" name="{{symptom.name+'-'+(question_number)|string}}" value="{{loop.index-1}}" /> {{choice}} </label></p>
+                    {% endfor %}
+                {% elif question.questionType () == "check" %}
+                    {% for choice in question.choices %}
+                        <p> <label><input type="checkbox" name="{{symptom.name+'-'+(question_number)|string+'-'+(loop.index-1)|string}}" value="1"/> {{choice}}</label> </p>
+                    {% endfor %}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
 
-  <button type="button" class="prev round">&#8249;</button>
-  <button type="button" class="next round">&#8250;</button>
-</div>
-
-<div id="headache" class="content symptom-questions">
-  <h4> Headache </h4>
-  <label for="headache-q1">How long have you had a headache for</label><br>
-  <input type="text" name="headache-q1" autocomplete="off"><br>
-
-  <button type="button" class="prev round">&#8249;</button>
-  <button type="button" class="next round">&#8250;</button>
-</div>
-
-<div id="fever" class="content symptom-questions">
-  <h4> Fever </h4>
-  <label for="fever-q1">How long have you had the fever for</label><br>
-  <input type="text" name="fever-q1" autocomplete="off"><br>
-  <label for="fever-q2">What temperature was your fever</label><br>
-  <input type="text" name="fever-q2" autocomplete="off"><br>
-
-  <button type="button" class="prev round">&#8249;</button>
-  <button type="button" class="next round">&#8250;</button>
-</div>
+        <button type="button" class="prev round">&#8249;</button>
+        <button type="button" class="next round">&#8250;</button>
+    </div>
+{% endfor %}
 </form>
 </div>
 

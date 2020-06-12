@@ -3,14 +3,40 @@
 {% block title %}Index{% endblock %}
 
 {% block head %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>
+    function makeid(length) {
+       var result           = '';
+       var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+       var charactersLength = characters.length;
+       for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       }
+       return result;
+    }
+
+    $(document).ready(function(){
+        $("#generate").click(()=>{
+            console.log("Clicked!")
+            url = "http\:\//localhost:5000/patient_form/" + makeid(20);
+            $("#form_link").val(url);
+        });
+    })
+</script>
 {% endblock %}
 
 {% block body %}
+<h2> Patients </h2>
 <ol>
 {% for token, response in responses %}
 <li>
-    <p> <a href="/form_gp_view/{{token}}"> {{response.patient.name}}: {{token}} </a> </p>
+    <p> <a href="/form_gp_view/{{token}}"> {{response.patient.name}}: {{response.date}} <span style="color:gray;">{{token}}<span> </a> </p>
 </li>
 {% endfor %}
 </ol>
+
+<h4> Generate Form </h4>
+<input type="text" id="form_link" size="60" disabled></input>
+<button id="generate">Generate Form Link</button>
+
 {% endblock %}

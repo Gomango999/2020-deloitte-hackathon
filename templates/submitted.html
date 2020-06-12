@@ -1,11 +1,70 @@
 {% extends "base.html" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Inform{% endblock %}
 
 {% block head %}
 {% endblock %}
 
 {% block body %}
-<h1> You Submitted </h1>
-<p> Fever Answer: {{response}} </p>
+<h1> You Submission Has Been Processed </h1>
+<ol>
+    {% for question in response.questions %}
+        <li>
+            <p> {{question.question}} </p>
+            {% if question.questionType() == "text" %}
+                <p> <input type="text" value="{{question.answer}}" disabled>   </p>
+            {% elif question.questionType() == "textarea" %}
+                <textarea rows="5" cols="50" disabled >{{question.answer}}</textarea>
+            {% elif question.questionType () == "radio" %}
+                {% for choice in question.choices %}
+                    {% if loop.index - 1 == question.answer %}
+                    <p> <label> <input type="radio" disabled checked/> {{choice}} </label></p>
+                    {% else %}
+                    <p> <label><input type="radio" disabled /> {{choice}} </label></p>
+                    {% endif %}
+                {% endfor %}
+            {% elif question.questionType () == "check" %}
+                {% for choice in question.choices %}
+                    {% if question.answer[loop.index-1] %}
+                    <p> <label><input type="checkbox" disabled checked/> {{choice}}</label> </p>
+                    {% else %}
+                    <p> <label><input type="checkbox" disabled /> {{choice}}</label> </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </li>
+    {% endfor %}
+
+    {% for symptom in response.symptoms %}
+        <li>
+            <p> {{symptom.name}} </p>
+            <ul>
+            {% for question in symptom.questions %}
+                <li>
+                    <p> {{question.question}} </p>
+                    {% if question.questionType() == "text" %}
+                        <p> <input type="text" value="{{question.answer}}" disabled>   </p>
+                    {% elif question.questionType () == "radio" %}
+                        {% for choice in question.choices %}
+                            {% if loop.index - 1 == question.answer|int %}
+                            <p> <label> <input type="radio" disabled checked/> {{choice}} </label></p>
+                            {% else %}
+                            <p> <label><input type="radio" disabled /> {{choice}} </label></p>
+                            {% endif %}
+                        {% endfor %}
+                    {% elif question.questionType () == "check" %}
+                        {% for choice in question.choices %}
+                            {% if question.answer[loop.index-1] %}
+                            <p> <label><input type="checkbox" disabled checked/> {{choice}}</label> </p>
+                            {% else %}
+                            <p> <label><input type="checkbox" disabled /> {{choice}}</label> </p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ol>
 {% endblock %}
