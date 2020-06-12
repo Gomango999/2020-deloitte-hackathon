@@ -20,3 +20,9 @@ def patient_form(form_token):
 @app.route('/submitted', methods=["POST"])
 def submitted():
     return render_template('submitted.html')
+    return render_template('patient.html', response=response)
+
+@app.route('/gp/<name>')
+def gp_page(name):
+    rs = filter(lambda r: r.gp.name == name, system._patient_responses.values())
+    return render_template('gp.html', responses=rs)
