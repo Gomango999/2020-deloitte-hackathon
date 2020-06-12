@@ -6,7 +6,11 @@ class Response:
         self._date = date
         self._worstsymp = worstsymp
         self._symp = symp #symp() constructor
-
+        
+    def addSymp(symptom):
+		self.symp[self.numsymps] = symptom
+		self.numsymps += 1
+        
     @property
     def patient(self):
         return self._patient
@@ -19,3 +23,4 @@ class Response:
     @property
     def questions(self):
         return self._questions
+ 
