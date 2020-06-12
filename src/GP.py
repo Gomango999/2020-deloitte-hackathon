@@ -1,9 +1,6 @@
 class GP:
-    def __init__(self, name):
-        self._name = name
-	self._email = email	
-	self._num = num
-	self._profile = Profile(name, gender, date, email, num)
+    def __init__(self, name, email, num):
+	self._profile = Profile(name, none, none, email, num)
 	self._patients = []
     	
     def addPt(self, patient):
