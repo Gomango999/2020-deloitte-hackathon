@@ -30,4 +30,4 @@ class System:
 
     def addsymp(self, symp):
         self._symps[self._symps.len()] = symp
-
+    '''
