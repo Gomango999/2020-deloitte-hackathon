@@ -7,36 +7,9 @@
 
 {% block body %}
 <ol>
-{% for response in responses %}
+{% for token, response in responses %}
 <li>
-    <p> {{response.patient.name}} </p>
-    <ol>
-    {% for question in response.questions %}
-        <li>
-            <p> {{question.question}} </p>
-            {% if question.questionType() == "text" %}
-                <p> <input type="text" value="{{question.answer}}" disabled>   </p>
-            {% elif question.questionType () == "radio" %}
-                {% for choice in question.choices %}
-                    {% if loop.index- 1 == question.answer %}
-                    <p> <label> <input type="radio" disabled checked/> {{choice}} </label></p>
-                    {% else %}
-                    <p> <label><input type="radio" disabled /> {{choice}} </label></p>
-                    {% endif %}
-                {% endfor %}
-            {% elif question.questionType () == "check" %}
-                {% for choice in question.choices %}
-                    {% if question.answer[loop.index-1] %}
-                    <p> <label><input type="checkbox" disabled checked/> {{choice}}</label> </p>
-                    {% else %}
-                    <p> <label><input type="checkbox" disabled /> {{choice}}</label> </p>
-                    {% endif %}
-                {% endfor %}
-            
-            {% endif %}
-        </li>
-    {% endfor %}
-    </ol>
+    <p> <a href="/form_gp_view/{{token}}"> {{response.patient.name}}: {{token}} </a> </p>
 </li>
 {% endfor %}
 </ol>
