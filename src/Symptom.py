@@ -2,8 +2,6 @@ class Symptom:
  	def __init__(self, name):
  		self.name = name
  		self.questions = []
- 		self.numqs = 0
 
  	def addQuestion(question):
- 		self.questions[self.numqs] = question
- 		self.numqs += 1 
+ 		self.questions[self.questions.len()] = question
