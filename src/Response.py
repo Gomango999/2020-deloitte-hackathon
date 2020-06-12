@@ -1,15 +1,16 @@
 class Response:
-    def __init__(self, patient, gp, questions, date, worstsymp, symp):
+    def __init__(self, patient, gp, questions, date, worstsymp):
         self._patient = patient
         self._gp = gp
         self._questions = questions
         self._date = date
         self._worstsymp = worstsymp
-        self._symp = symp #symp() constructor
+        self._symp = []
+	self._numsymps = 0
         
     def addSymp(symptom):
-		self.symp[self.numsymps] = symptom
-		self.numsymps += 1
+	self._symp[self._numsymps] = symptom
+	self._numsymps += 1
         
     @property
     def patient(self):
