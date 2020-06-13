@@ -30,7 +30,7 @@ class TextQuestion(Question):
         return "text"
 
     def set_answer(self, text):
-        self._answer = text;
+        self._answer = text
 
 class TextAreaQuestion(Question):
     def __init__(self, question):
@@ -40,7 +40,7 @@ class TextAreaQuestion(Question):
         return "textarea"
 
     def set_answer(self, text):
-        self._answer = text;
+        self._answer = text
 
 class CheckBoxQuestion(Question):
     def __init__(self, question, choices):

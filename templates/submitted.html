@@ -43,7 +43,7 @@
                 <li>
                     <p> {{question.question}} </p>
                     {% if question.questionType() == "text" %}
-                        <p> <input type="text" value="{{question.answer}}" disabled>   </p>
+                        <p> <input type="text" value="{{question.answer}}" disabled> </p>
                     {% elif question.questionType () == "radio" %}
                         {% for choice in question.choices %}
                             {% if loop.index - 1 == question.answer|int %}

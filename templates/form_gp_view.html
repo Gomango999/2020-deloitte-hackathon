@@ -44,9 +44,11 @@
                     <p> {{question.question}} </p>
                     {% if question.questionType() == "text" %}
                         <p> <input type="text" value="{{question.answer}}" disabled>   </p>
+                    {% elif question.questionType() == "textarea" %}
+                        <textarea rows="5" cols="50" disabled>{{question.answer}}</textarea>
                     {% elif question.questionType () == "radio" %}
                         {% for choice in question.choices %}
-                            {% if loop.index - 1 == question.answer %}
+                            {% if loop.index - 1 == question.answer|int %}
                             <p> <label> <input type="radio" disabled checked/> {{choice}} </label></p>
                             {% else %}
                             <p> <label><input type="radio" disabled /> {{choice}} </label></p>
